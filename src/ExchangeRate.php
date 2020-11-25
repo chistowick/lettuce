@@ -2,21 +2,22 @@
 
 namespace Chistowick\Lettuce;
 
+use Chistowick\Lettuce\Interfaces\ConvertibleToArray;
 use Chistowick\Lettuce\Interfaces\SaveableToCache;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Instance class for storing exchange rates.
+ * The class for the storing and handling of exchange rates.
  */
-class ExchangeRate implements SaveableToCache
+class ExchangeRate implements SaveableToCache, ConvertibleToArray
 {
-    protected $date;
-    protected $real_date;
-    protected $from;
-    protected $to;
-    protected $factor;
+    private $date;
+    private $real_date;
+    private $from;
+    private $to;
+    private $factor;
 
 
     public function __construct(string $from, string $to, string $factor, string $date, string $real_date)
@@ -52,5 +53,21 @@ class ExchangeRate implements SaveableToCache
 
             return false;
         }
+    }
+
+    /**
+     * Converts exchange rate instance to array
+     *
+     * @return array
+     **/
+    public function toArray(): array
+    {
+        return [
+            'date' => $this->date,
+            'from' => $this->from,
+            'to' => $this->to,
+            'factor' => $this->factor,
+            'real_date' => $this->real_date,
+        ];
     }
 }
