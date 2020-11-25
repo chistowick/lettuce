@@ -2,11 +2,16 @@
 
 namespace Chistowick\Lettuce;
 
+use Chistowick\Lettuce\Interfaces\SaveableToCache;
+
 /**
  * The class for receiving and processing currency rates from the Central Bank of the Russian Federation API.
  */
 class ExchangeRatesHandler
 {
+    /** @var int $expiration The cache expiration time, in seconds.*/
+    protected $expiration = 60 * 60 * 24;
+
     /**
      * Interceptor method for creating short methods for fast currency conversion.
      *
@@ -43,8 +48,22 @@ class ExchangeRatesHandler
      * @param string $date Date (YYYY-MM-DD)
      * @return string|null Factor for converting $from to $to
      **/
-    public function getFactor(string $from, string $to, string $date):?string
+    public function getFactor(string $from, string $to, string $date): ?string
     {
         return null;
+    }
+
+    /**
+     * Saves a set of exchange rates in the cache.
+     *
+     * @param SaveableToCache ...$set A set of instances ExchangeRates to save in the cache.
+     * @return bool
+     * @throws
+     **/
+    protected function saveToCache(SaveableToCache ...$set)
+    {
+        foreach ($set as $item) {
+            $item->toCache($this->expiration);
+        }
     }
 }
