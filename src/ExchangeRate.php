@@ -49,7 +49,7 @@ class ExchangeRate implements SaveableToCache, ConvertibleToArray
             return true;
         } catch (Exception $e) {
 
-            Log::error("{Exchange Rate: $e->getMessage()}");
+            Log::error("Exchange Rate: {$e->getMessage()}");
 
             return false;
         }

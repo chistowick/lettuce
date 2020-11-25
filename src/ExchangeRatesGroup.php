@@ -41,7 +41,7 @@ class ExchangeRatesGroup implements SaveableToMysql, ConvertibleToArray, Saveabl
 
             return true;
         } catch (Exception $e) {
-            Log::error("{Exchange Rate: $e->getMessage()}");
+            Log::error("Exchange Rate: {$e->getMessage()}");
 
             return false;
         }
@@ -71,7 +71,7 @@ class ExchangeRatesGroup implements SaveableToMysql, ConvertibleToArray, Saveabl
     {
         foreach ($this->group as $rate) {
             if (!$rate->toCache($expiration)) {
-                break;
+                return false;
             }
         }
 
