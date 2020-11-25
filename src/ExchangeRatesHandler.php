@@ -37,11 +37,7 @@ class ExchangeRatesHandler
     }
 
     /**
-     * Returns the value of the coefficient for converting one currency to another on the selected date; 
-     * Carries out sequential search in the cache, in the database, in the API of the Central Bank of the Russian Federation;
-     * Automatically tries to save the received data in the previous search locations;
-     * In case of impossibility to receive data even through the API or in case of unrecoverable problems, returns null;
-     * Writes logs. See configuration;
+     * Returns the value of the coefficient for converting one currency to another on the selected date;
      *
      * @param string $from Source currency letter code
      * @param string $to Destination currency letter code
@@ -56,14 +52,11 @@ class ExchangeRatesHandler
     /**
      * Saves a set of exchange rates in the cache.
      *
-     * @param SaveableToCache ...$set A set of instances ExchangeRates to save in the cache.
-     * @return bool
-     * @throws
+     * @param SaveableToCache $group A set of instances ExchangeRates to save in the cache.
+     * @return void
      **/
-    protected function saveToCache(SaveableToCache ...$set)
+    protected function saveToCache(SaveableToCache $group): void
     {
-        foreach ($set as $item) {
-            $item->toCache($this->expiration);
-        }
+        $group->toCache($this->expiration);
     }
 }
