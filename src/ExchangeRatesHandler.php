@@ -3,6 +3,7 @@
 namespace Chistowick\Lettuce;
 
 use Chistowick\Lettuce\Interfaces\SaveableToCache;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -12,7 +13,7 @@ use Exception;
 class ExchangeRatesHandler
 {
     /** @var int $expiration The cache expiration time, in seconds.*/
-    protected $expiration = 60 * 60 * 24;
+    private $expiration = 60 * 60 * 24;
 
     /**
      * Interceptor method for creating short methods for fast currency conversion.
@@ -44,9 +45,9 @@ class ExchangeRatesHandler
      * @param string $from Source currency letter code
      * @param string $to Destination currency letter code
      * @param string $date Date (YYYY-MM-DD)
-     * @return string|null Factor for converting $from to $to
+     * @return float|null Factor for converting $from to $to
      **/
-    public function getFactor(string $from, string $to, string $date): ?string
+    public function getFactor(string $from, string $to, string $date): ?float
     {
         return null;
     }
@@ -63,6 +64,25 @@ class ExchangeRatesHandler
             $group->toCache($this->expiration);
         } catch (Exception $e) {
             Log::error("Exchange Rate: {$e->getMessage()}");
+        }
+    }
+
+    /**
+     * Search for data in the cache.
+     *
+     * @param string $from Source currency letter code
+     * @param string $to Destination currency letter code
+     * @param string $date Date (YYYY-MM-DD)
+     * @return string|null
+     **/
+    protected function checkCache(string $from, string $to, string $date): ?string
+    {
+        try {
+            return Cache::get("{$date}:{$from}:{$to}");
+        } catch (Exception $e) {
+            Log::error("Exchange Rate: {$e->getMessage()}");
+
+            return null;
         }
     }
 }
