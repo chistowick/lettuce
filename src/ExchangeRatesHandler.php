@@ -3,7 +3,6 @@
 namespace Chistowick\Lettuce;
 
 use Chistowick\Lettuce\Interfaces\SaveableToCache;
-use Chistowick\Lettuce\Interfaces\SaveableToMysql;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -62,21 +61,6 @@ class ExchangeRatesHandler
     {
         try {
             $group->toCache($this->expiration);
-        } catch (Exception $e) {
-            Log::error("Exchange Rate: {$e->getMessage()}");
-        }
-    }
-
-    /**
-     * Saves a set of exchange rates to MySQL.
-     *
-     * @param SaveableToMysql $group A set of instances ExchangeRates to save in MySQL.
-     * @return void
-     **/
-    public function saveToMysql(SaveableToMysql $group): void
-    {
-        try {
-            $group->toMysql();
         } catch (Exception $e) {
             Log::error("Exchange Rate: {$e->getMessage()}");
         }
