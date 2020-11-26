@@ -7,8 +7,6 @@ use Chistowick\Lettuce\ExchangeRate;
 use App\Models\Rate;
 use Chistowick\Lettuce\Interfaces\ConvertibleToArray;
 use Chistowick\Lettuce\Interfaces\SaveableToCache;
-use Illuminate\Support\Facades\Log;
-use Exception;
 
 /**
  * The class for storing and processing a group of exchange rates.
@@ -32,19 +30,11 @@ class ExchangeRatesGroup implements SaveableToMysql, ConvertibleToArray, Saveabl
     /**
      * Save to MySQL.
      *
-     * @return bool
+     * @return void
      **/
-    public function toMysql(): bool
+    public function toMysql(): void
     {
-        try {
-            Rate::insert($this->toArray());
-
-            return true;
-        } catch (Exception $e) {
-            Log::error("Exchange Rate: {$e->getMessage()}");
-
-            return false;
-        }
+        Rate::insert($this->toArray());
     }
 
     /**
@@ -64,17 +54,12 @@ class ExchangeRatesGroup implements SaveableToMysql, ConvertibleToArray, Saveabl
     /**
      * Saves the group to cache.
      *
-     * @return bool
-     * @throws 
+     * @return void
      **/
-    public function toCache(int $expiration = null): bool
+    public function toCache(int $expiration = null): void
     {
         foreach ($this->group as $rate) {
-            if (!$rate->toCache($expiration)) {
-                return false;
-            }
+            $rate->toCache($expiration);
         }
-
-        return true;
     }
 }

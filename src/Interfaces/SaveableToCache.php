@@ -7,5 +7,5 @@ namespace Chistowick\Lettuce\Interfaces;
  */
 interface SaveableToCache
 {
-    public function toCache(): bool;
+    public function toCache(): void;
 }

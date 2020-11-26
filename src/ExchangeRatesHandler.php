@@ -4,6 +4,8 @@ namespace Chistowick\Lettuce;
 
 use Chistowick\Lettuce\Interfaces\SaveableToCache;
 use Chistowick\Lettuce\Interfaces\SaveableToMysql;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 /**
  * The class for receiving and processing currency rates from the Central Bank of the Russian Federation API.
@@ -58,7 +60,11 @@ class ExchangeRatesHandler
      **/
     protected function saveToCache(SaveableToCache $group): void
     {
-        $group->toCache($this->expiration);
+        try {
+            $group->toCache($this->expiration);
+        } catch (Exception $e) {
+            Log::error("Exchange Rate: {$e->getMessage()}");
+        }
     }
 
     /**
@@ -69,6 +75,10 @@ class ExchangeRatesHandler
      **/
     public function saveToMysql(SaveableToMysql $group): void
     {
-        $group->toMysql();
+        try {
+            $group->toMysql();
+        } catch (Exception $e) {
+            Log::error("Exchange Rate: {$e->getMessage()}");
+        }
     }
 }

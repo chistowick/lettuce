@@ -7,5 +7,5 @@ namespace Chistowick\Lettuce\Interfaces;
  */
 interface SaveableToMysql
 {
-    public function toMysql(): bool;
+    public function toMysql(): void;
 }

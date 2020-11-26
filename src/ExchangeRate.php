@@ -4,9 +4,7 @@ namespace Chistowick\Lettuce;
 
 use Chistowick\Lettuce\Interfaces\ConvertibleToArray;
 use Chistowick\Lettuce\Interfaces\SaveableToCache;
-use Exception;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 /**
  * The class for the storing and handling of exchange rates.
@@ -32,27 +30,17 @@ class ExchangeRate implements SaveableToCache, ConvertibleToArray
     /**
      * Save to cache.
      *
-     * @return bool
-     * @throws 
+     * @return void
      **/
-    public function toCache(int $expiration = null): bool
+    public function toCache(int $expiration = null): void
     {
-        try {
-            $key  = "{$this->date}:{$this->from}:{$this->to}";
-            $value = $this->factor;
+        $key  = "{$this->date}:{$this->from}:{$this->to}";
+        $value = $this->factor;
 
-            $arr = array($key, $value);
-            $expiration ? ($arr[] = $expiration) : null;
+        $arr = array($key, $value);
+        $expiration ? ($arr[] = $expiration) : null;
 
-            Cache::put(...$arr);
-
-            return true;
-        } catch (Exception $e) {
-
-            Log::error("Exchange Rate: {$e->getMessage()}");
-
-            return false;
-        }
+        Cache::put(...$arr);
     }
 
     /**
