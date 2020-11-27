@@ -11,14 +11,12 @@ use Illuminate\Support\Facades\Cache;
 class ExchangeRate implements SaveableToCache
 {
     private $from;
-    private $to;
     private $factor;
     private $date;
 
-    public function __construct(string $from, string $to, float $factor, string $date)
+    public function __construct(string $from, float $factor, string $date)
     {
         $this->from = $from;
-        $this->to = $to;
         $this->factor = $factor;
         $this->date = $date;
     }
@@ -30,7 +28,7 @@ class ExchangeRate implements SaveableToCache
      **/
     public function toCache(int $expiration = null): void
     {
-        $key  = "{$this->date}:{$this->from}:{$this->to}";
+        $key  = "{$this->date}:{$this->from}";
         $value = $this->factor;
 
         $arr = array($key, $value);
