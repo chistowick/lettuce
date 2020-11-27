@@ -35,4 +35,19 @@ class ExchangeRatesGroup implements SaveableToCache
             $rate->toCache($expiration);
         }
     }
+
+    /**
+     * Finds the factor value by the value '$from'
+     *
+     * @param string $from Source currency char-code
+     * @return float|null
+     **/
+    public function findFactor(string $from): ?float
+    {
+        foreach ($this->group as $rate) {
+            if ($rate->from === $from) {
+                return $rate->factor;
+            }
+        }
+    }
 }
