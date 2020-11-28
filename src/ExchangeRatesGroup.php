@@ -45,8 +45,8 @@ class ExchangeRatesGroup implements SaveableToCache
     public function findFactor(string $from): ?float
     {
         foreach ($this->group as $rate) {
-            if ($rate->from === $from) {
-                return $rate->factor;
+            if ($rate->getFrom() === $from) {
+                return $rate->getFactor();
             }
         }
     }
