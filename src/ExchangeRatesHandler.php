@@ -19,10 +19,12 @@ class ExchangeRatesHandler
     private $expiration = 60 * 60 * 24;
 
     /** @var array $codes The set of currency codes.*/
-    protected $codes = [
-        'USD' => 'R01235',
-        'EUR' => 'R01239',
-    ];
+    protected $codes;
+
+    public function __construct()
+    {
+        $this->codes = include(__DIR__ . "/../config/codes.php");
+    }
 
     /**
      * Interceptor method for creating short methods for fast currency conversion.
@@ -141,7 +143,7 @@ class ExchangeRatesHandler
         try {
             $group->toCache($this->expiration);
         } catch (Exception $e) {
-            Log::error("ExchangeRatesHandler: {$e->getMessage()}");
+            Log::error("ExchangeRatesHandler: Problems with saving in the cache. {$e->getMessage()}");
         }
     }
 
@@ -157,7 +159,7 @@ class ExchangeRatesHandler
         try {
             return Cache::get("{$date}:{$from}");
         } catch (Exception $e) {
-            Log::error("ExchangeRatesHandler: {$e->getMessage()}");
+            Log::error("ExchangeRatesHandler: Problems with the search in the cache. {$e->getMessage()}");
 
             return null;
         }
@@ -185,8 +187,21 @@ class ExchangeRatesHandler
                     throw new Exception("The API response is empty.");
                 }
 
-                $last_value = str_replace(',', '.', $xml->xpath("/ValCurs/Record[last()]/Value"));
-                $last_nominal = $xml->xpath("/ValCurs/Record[last()]/Nominal");
+                $matches = $xml->xpath("/ValCurs/Record[last()]");
+                $last_record = $matches[0];
+
+                // Checking if there is already a course for tomorrow
+                $request_date = Carbon::createFromDate($date);
+                if ($request_date->isFuture()) {
+                    $last_real_date = (string)$last_record['Date'];
+
+                    if ($last_real_date != ($request_date->format('d.m.Y'))) {
+                        throw new Exception("The exchange rates for tomorrow have not yet been published.");
+                    }
+                }
+
+                $last_value = str_replace(',', '.', (string)$last_record->Value);
+                $last_nominal = (float)$last_record->Nominal;
 
                 if (!preg_match("/^[0-9]+\.[0-9]+$/", $last_value)) {
                     throw new Exception("Invalid format of the exchange rate value from the api.");
@@ -231,7 +246,11 @@ class ExchangeRatesHandler
     {
         try {
             if ($date) {
+
                 $pieces = explode('-', $date);
+                if (count($pieces) != 3) {
+                    throw new Exception("The date must be in the YYYY-MM-DD format.");
+                }
                 $time_point = Carbon::createSafe((int)$pieces[0], (int)$pieces[1], (int)$pieces[2]);
 
                 if ($time_point->isFuture()) {
@@ -239,7 +258,7 @@ class ExchangeRatesHandler
                     $interval = $time_point->diffInDays($today);
 
                     if ($interval > 1) {
-                        throw new Exception("'{$time_point->format("Y-m-d")}' - is incorrect date.");
+                        throw new Exception("'{$time_point->format("Y-m-d")}' - too far in the future.");
                     }
                 }
                 return $time_point->format("Y-m-d");
