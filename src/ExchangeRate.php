@@ -14,7 +14,7 @@ class ExchangeRate implements SaveableToCache
     private $factor;
     private $date;
 
-    public function __construct(string $from, float $factor, string $date)
+    public function __construct(string $from, ?float $factor, string $date)
     {
         $this->from = $from;
         $this->factor = $factor;
@@ -50,9 +50,9 @@ class ExchangeRate implements SaveableToCache
     /**
      * Returns $this->factor
      *
-     * @return string
+     * @return string|null
      **/
-    public function getFactor(): float
+    public function getFactor(): ?float
     {
         return $this->factor;
     }

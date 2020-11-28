@@ -49,5 +49,6 @@ class ExchangeRatesGroup implements SaveableToCache
                 return $rate->getFactor();
             }
         }
+        return null;
     }
 }

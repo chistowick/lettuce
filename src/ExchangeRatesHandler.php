@@ -184,7 +184,9 @@ class ExchangeRatesHandler
                 $xml = simplexml_load_file($url);
 
                 if (!isset($xml->Record)) {
-                    throw new Exception("The API response is empty.");
+                    Log::info("ExchangeRatesHandler: Failed to load the exchange rate on '{$date}' for char-code: $char_code");
+                    $group->addRate(new ExchangeRate($char_code, null, $date));
+                    continue;
                 }
 
                 $matches = $xml->xpath("/ValCurs/Record[last()]");
