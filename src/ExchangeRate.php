@@ -36,4 +36,24 @@ class ExchangeRate implements SaveableToCache
 
         Cache::put(...$arr);
     }
+
+    /**
+     * Returns $this->from
+     *
+     * @return string
+     **/
+    public function getFrom(): string
+    {
+        return $this->from;
+    }
+
+    /**
+     * Returns $this->factor
+     *
+     * @return string
+     **/
+    public function getFactor(): float
+    {
+        return $this->factor;
+    }
 }
