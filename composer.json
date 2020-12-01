@@ -2,7 +2,11 @@
     "name": "chistowick/lettuce",
     "description": "The package for receiving and processing currency rates from the Central Bank of the Russian Federation API.",
     "type": "library",
-    "license": "MIT License",
+    "license": "MIT",
+    "keywords": [
+        "laravel",
+        "exchange rate"
+    ],
     "authors": [
         {
             "name": "Anatoly Chinyaev",
@@ -14,8 +18,11 @@
             "Chistowick\\Lettuce\\": "src/"
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
-        "php": ">=7.4.0"
+        "php": ">=7.4.0",
+        "illuminate/support": "^7.0|^8.0",
+        "monolog/monolog": "^2.0",
+        "nesbot/carbon": "^2.31",
     }
 }
