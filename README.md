@@ -60,3 +60,6 @@ The received courses will be cached according to the default driver value in the
 ### Logging
     
 The program logs exceptions and key points according to the default channel value in the configuration of your Laravel application.
+***
+### Configuration
+The list of downloadable currencies is available in the package by the path: lettuce/config/codes.php
