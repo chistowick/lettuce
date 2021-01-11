@@ -30,15 +30,15 @@ final class ExchangeRatesHandlerTest extends TestCase
     public function incorrectDatesProvider(): array
     {
         return [
-            ['2021-00-11'],
-            ['2021-13-01'],
-            ['2021-01-32'],
-            ['11-01-2021'],
-            ['21-01-11'],
-            ['2021-01'],
-            ['2021-02-29'],
-            ['2020--12'],
-            ['2020/11/12']
+            'month = 00' => ['2021-00-11'],
+            'month = 13' => ['2021-13-01'],
+            'day = 32' => ['2021-01-32'],
+            'reverse the order' => ['11-01-2021'],
+            'year = YY format' => ['21-01-11'],
+            'day lost' => ['2021-01'],
+            'a nonexistent day in a non-leap year' => ['2021-02-29'],
+            'month lost' => ['2020--12'],
+            'YYYY/MM/DD format' => ['2020/11/12']
         ];
     }
 }
