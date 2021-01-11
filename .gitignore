@@ -8,5 +8,7 @@
 .vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+vendor/
+/composer.lock
 
 # End of https://www.toptal.com/developers/gitignore/api/vscode
