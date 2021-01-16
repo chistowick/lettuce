@@ -38,7 +38,6 @@ class ExchangeRatesHandler
         preg_match('~^[A-Za-z]{3}To[A-Za-z]{3}$~', $method, $matches);
 
         if ($matches) {
-
             $currencies = explode('To', $matches[0]);
 
             $from = strtoupper($currencies[0]);
@@ -92,7 +91,6 @@ class ExchangeRatesHandler
     protected function getRateToRub(string $from, ?string $date): ?float
     {
         try {
-
             if ($from == "RUB") {
                 return (float)1;
             }
@@ -110,24 +108,20 @@ class ExchangeRatesHandler
 
             // Search for data in the cache.
             $data_cache = $this->checkCache($from, $date);
-
             if (isset($data_cache)) {
                 return (float) $data_cache;
             }
 
             // Attempt to get data from the API of the Central Bank of the Russian Federation
             $data_api = $this->checkApi($date);
-
             if (isset($data_api)) {
                 $this->saveToCache($data_api);
-
                 return $data_api->findFactor($from);
             } else {
                 return null;
             }
         } catch (Exception $e) {
             Log::error("ExchangeRatesHandler: Unexpectedly... {$e->getMessage()}");
-
             return null;
         }
     }
@@ -160,7 +154,6 @@ class ExchangeRatesHandler
             return Cache::get("{$date}:{$from}");
         } catch (Exception $e) {
             Log::error("ExchangeRatesHandler: Problems with the search in the cache. {$e->getMessage()}");
-
             return null;
         }
     }
@@ -180,9 +173,7 @@ class ExchangeRatesHandler
             $group = new ExchangeRatesGroup();
 
             foreach ($this->setUrls($start, $end) as $char_code => $url) {
-
                 $xml = simplexml_load_file($url);
-
                 if (!isset($xml->Record)) {
                     Log::info("ExchangeRatesHandler: Failed to load the exchange rate on '{$date}' for char-code: $char_code");
                     $group->addRate(new ExchangeRate($char_code, null, $date));
@@ -208,7 +199,6 @@ class ExchangeRatesHandler
                 if (!preg_match("/^[0-9]+\.[0-9]+$/", $last_value)) {
                     throw new Exception("Invalid format of the exchange rate value from the api.");
                 }
-
                 if (($last_nominal == 0) || !is_numeric($last_nominal)) {
                     throw new Exception("Invalid format of the nominal value from the api.");
                 }
@@ -248,17 +238,15 @@ class ExchangeRatesHandler
     {
         try {
             if ($date) {
-
                 $pieces = explode('-', $date);
                 if (count($pieces) != 3) {
                     throw new Exception("The date must be in the YYYY-MM-DD format.");
                 }
-                $time_point = Carbon::createSafe((int)$pieces[0], (int)$pieces[1], (int)$pieces[2]);
 
+                $time_point = Carbon::createSafe((int)$pieces[0], (int)$pieces[1], (int)$pieces[2]);
                 if ($time_point->isFuture()) {
                     $today = Carbon::today();
                     $interval = $time_point->diffInDays($today);
-
                     if ($interval > 1) {
                         throw new Exception("'{$time_point->format("Y-m-d")}' - too far in the future.");
                     }
@@ -269,7 +257,6 @@ class ExchangeRatesHandler
             }
         } catch (Exception $e) {
             Log::error("ExchangeRatesHandler: The inputted date is incorrect. {$e->getMessage()}");
-
             return null;
         }
     }

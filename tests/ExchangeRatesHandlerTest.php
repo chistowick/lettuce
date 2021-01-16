@@ -45,7 +45,7 @@ final class ExchangeRatesHandlerTest extends TestCase
     /**
      * @dataProvider exchangeRatesProvider
      */
-    public function testCanGetExchangeRatesForTheSelectedDate(string $date, string $currency_name, string $expected_rate)
+    public function testCanCorrectlyGetExchangeRatesForTheSelectedDate(string $date, string $currency_name, string $expected_rate)
     {
         $erh = new ExchangeRatesHandler();
 
